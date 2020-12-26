@@ -29,7 +29,12 @@ app.add_url_rule('/chart03', view_func=charts.chart_view03)
 app.add_url_rule('/chart04', view_func=charts.chart_view04)
 
 # Test for TamperMonkey Post 
-app.add_url_rule('/notices', view_func=views.api_post_notice, methods=['POST'])
+app.add_url_rule('/api/notices/<string:nid>', \
+    view_func=views.api_post_notice, methods=['POST'])
+app.add_url_rule('/api/notices', \
+    view_func=views.api_get_list_of_empty_content, methods=['GET'])
+app.add_url_rule('/api/notices/<string:nid>/content',\
+    view_func=views.api_post_notice_content, methods=['POST'])
 
 # 仅用于flask Debug，生产环境应取消
 # toolbar = DebugToolbarExtension(app)    # 该扩展要求app必须设置SECRET_KEY，已包含在settings.py中

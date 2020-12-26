@@ -62,7 +62,7 @@ def notice_page_view(type_id):
 '''
     Func: 试图插入一条Notice
 '''
-def api_post_notice():
+def api_post_notice(nid):
     json_data = json.loads(request.get_data().decode("utf-8"))
     try:    # try to insert new record
         BidNotice(
@@ -73,18 +73,20 @@ def api_post_notice():
             spider = json_data['spider'], 
             source_ch = json_data['source_ch'],
             notice_url = json_data['notice_url'],
-            notice_content = json_data['notice_content'], 
+            # notice_content = json_data['notice_content'], 
             published_date = datetime.datetime.strptime(json_data['published_date'], '%Y-%m-%d'),   # 日期转换
 
             # 填入API网关当前时间
             timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=8),   
         ).save()               
     except (NotUniqueError):  ## DuplicateKeyError,
-        print('Dup rec! nid=' + json_data['nid'])
-        return 'dup rec', 200
+        abort(204, 'Dup rec')
     except ValueError as e:
-        print('Unknown error:', e)
-        return('error',200)
-    finally:
-        return  'ok', 200
+        abort(400, str(e))
+    return  'ok', 200
     
+def api_get_list_of_empty_content():
+    return  'ok', 200
+
+def api_post_notice_content(nid):
+    return  'ok', 200
