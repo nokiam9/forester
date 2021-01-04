@@ -1,0 +1,14 @@
+<table class="table table-hover text-center text-nowrap table-bordered">
+    <thead class="thead-default">
+    </thead>
+    <tbody>
+    {% for todo in todos %}
+    <tr>
+        <td>{{todo.nid}}</td>
+        <td>{{todo.title}}</td>
+        <td>{{todo.notice_url}}</td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+</table>

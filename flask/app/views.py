@@ -2,6 +2,7 @@
 
 from flask import request, render_template, abort
 from mongoengine.errors import NotUniqueError
+from pymongo.errors import DuplicateKeyError
 
 from models import BidNotice
 
@@ -79,14 +80,22 @@ def api_post_notice(nid):
             # 填入API网关当前时间
             timestamp = datetime.datetime.utcnow() + datetime.timedelta(hours=8),   
         ).save()               
-    except (NotUniqueError):  ## DuplicateKeyError,
-        abort(204, 'Dup rec')
-    except ValueError as e:
-        abort(400, str(e))
+    except (NotUniqueError, DuplicateKeyError):  ## DuplicateKeyError,
+        abort(405)
+    except ValueError:
+        abort(404)
     return  'ok', 200
     
 def api_get_list_of_empty_content():
-    return  'ok', 200
+    page_size = request.args.get('page_size', default=10, type=int)
+    flag = request.args.get('empty_content', default=False, type=bool)
+
+    if (flag == True):
+        todos = BidNotice.objects(notice_content__exists=False).limit(page_size)
+    else:
+        todos = BidNotice.objects().limit(page_size)
+    
+    return  render_template('page.html', todos=todos)
 
 def api_post_notice_content(nid):
     return  'ok', 200

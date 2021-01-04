@@ -20,12 +20,15 @@ class BidNotice (db.Document):
     title = db.StringField()
     notice_type = db.StringField()
     source_ch = db.StringField()
-    notice_url = db.StringField()
     notice_content = db.StringField()
     published_date = db.DateTimeField()
     timestamp = db.DateTimeField()
     reminded_time = db.DateTimeField()
     type_id = db.StringField()
     spider = db.StringField()
-    attachment_urls = db.ListField(required=False)
-    attachment_files = db.ListField(required=False)
+    notice_url = db.StringField()
+    # attachment_urls = db.ListField(required=False)
+    # attachment_files = db.ListField(required=False)
+
+    def __repr__(self):
+        return 'nid=%s, title=%s' % (self.nid, self.title)
